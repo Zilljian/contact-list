@@ -1,4 +1,4 @@
-class Contact(object):
+class Contact:
     __name = ""
     __surname = ""
     __number = None
