@@ -30,9 +30,7 @@ def date_is_valid(date):
 
 
 def number_is_valid(number):
-    if isinstance(number, int):
-        number = str(number)
-        number = re.sub("[- ]*", ' ', number)
+    if isinstance(number, str):
         return re.fullmatch("(?:\+7|8)\d{10}", number)
     raise TypeError
 
@@ -40,4 +38,10 @@ def number_is_valid(number):
 def tag_is_valid(tag):
     if isinstance(tag, str):
         return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+\b", tag)
+    raise TypeError
+
+
+def filename_is_valid(filename):
+    if isinstance(filename, str):
+        return re.fullmatch("[A-Za-z_\\\d:-]+", filename)
     raise TypeError
