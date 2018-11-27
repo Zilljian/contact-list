@@ -3,9 +3,12 @@ class Contact:
     def __init__(self, name, surname, number, date=None):
         self.__name = name
         self.__surname = surname
-        self.__number = {'Main': number}
+        if isinstance(number, int):
+            self.__number = {'Main': number}
+        else:
+            self.__number = number
         self.__birth_date = date
-        self.__number_list_len = 1
+        self.__number_list_len = self.__number.__len__()
 
     def get_name(self):
         return self.__name
@@ -39,10 +42,17 @@ class Contact:
         self.__birth_date = new_date
 
     @staticmethod
-    def default(object):
+    def encode(object):
         if isinstance(object, Contact):
             return {
                 'Name': object.get_name(),
                 'Surname': object.get_surname(),
-                'Number': object.get_number_list()}
+                'Number': object.get_number_list(),
+                'Date': object.get_birth_date()}
         raise TypeError
+
+    @staticmethod
+    def decode(dct):
+        if "Name" in dct:
+            return Contact(dct['Name'], dct['Surname'], dct['Number'], dct['Date'])
+        return dct
