@@ -56,3 +56,13 @@ class Contact:
         if "Name" in dct:
             return Contact(dct['Name'], dct['Surname'], dct['Number'], dct['Date'])
         return dct
+
+    def print_contact(self):
+        print(self.__name + " " + self.__surname, end=' ')
+        if self.__birth_date:
+            print(str(self.__birth_date))
+        else:
+            print()
+        for key, value in self.__number.items():
+            print(key + " : " + str(value))
+        print()
