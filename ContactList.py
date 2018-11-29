@@ -1,12 +1,6 @@
 from Contact import Contact
 import json
-import re
-from validator import \
-    name_is_valid, \
-    surname_is_valid, \
-    date_is_valid, \
-    number_is_valid, \
-    tag_is_valid
+from ex import *
 
 
 class ContactList:
@@ -19,10 +13,14 @@ class ContactList:
         self.__initialize_list()
         self.__contacts_number = self.__contact_list.__len__()
         if self.__contacts_number == 0:
-            print("\nInitial contact list is empty.")
+            print("\n=== Initial contact list is empty ===\n")
         else:
-            print("\nSuccessfully upload stored contact list. "
+            print("\n=== Successfully upload stored contact list ===\n"
                   "Number of contacts = " + str(self.__contacts_number))
+        try:
+            self.__init_name_list()
+        except PairExistException as e:
+            raise PairExistException(str(e))
 
     def __initialize_list(self):
         with open(self.__json_file_name, "r") as json_handler:
@@ -37,11 +35,12 @@ class ContactList:
 
     def add_contact(self, name, surname, number, date=None):
         self.__contact_list.append(Contact(name, surname, number, date))
-        self.__push_to_data_base()
+        self.__contacts_number = self.__contact_list.__len__()
+        self.__push_to_data_base(self.__contact_list[-1])
 
-    def is_contact_in_list(self, name=None, surname=None, number=None, date=None):
+    def get_matched(self, name=None, surname=None, number=None, date=None):
         if name and surname and number and date:
-            raise ValueError
+            raise NoneParamFound
         else:
             temp_list = list()
             if name is not None:
@@ -59,8 +58,6 @@ class ContactList:
                 temp_list = contraction
 
             if number is not None:
-                #number = re.sub("[- ]*", '', number)
-                #number = re.sub("\b+7", '', number)
                 contraction = list()
                 temp = temp_list if len(temp_list) != 0 else self.__contact_list
 
@@ -75,20 +72,25 @@ class ContactList:
                 contraction = list()
                 temp = temp_list if len(temp_list) != 0 else self.__contact_list
 
-                for item in temp_list:
+                for item in temp:
                     if item.get_date() == date:
                         contraction.append(item)
                 temp_list = contraction
 
             return temp_list
 
-    def print(self):
+    def print_all(self):
         for item in self.__contact_list:
-            print(str(item.get_name()) + " " + str(item.get_surname()), end=' ')
-            if item.get_birth_date():
-                print(str(item.get_birth_date()))
+            item.print_contact()
+
+    def __init_name_list(self):
+        self.__name_list = list()
+
+        for item in self.__contact_list:
+            if (item.get_name(), item.get_surname()) not in self.__name_list:
+                self.__name_list.append((item.get_name(), item.get_surname()))
             else:
-                print()
-            for key, value in item.get_number_list().items():
-                print(key + " : " + str(value))
-            print()
+                raise PairExistException(str(item.get_name()) + str(item.get_surname()))
+
+    def get_name_list(self):
+        return self.__name_list
