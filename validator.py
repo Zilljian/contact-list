@@ -4,7 +4,7 @@ import datetime
 
 def name_is_valid(name):
     if isinstance(name, str):
-        return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+\b", name)
+        return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+", name)
     raise TypeError
 
 
@@ -43,5 +43,5 @@ def tag_is_valid(tag):
 
 def filename_is_valid(filename):
     if isinstance(filename, str):
-        return re.fullmatch("[A-Za-z_\\\d:-]+", filename)
+        return re.fullmatch("[A-Za-z_.\\\d:-]+", filename)
     raise TypeError
