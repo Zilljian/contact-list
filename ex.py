@@ -1,3 +1,7 @@
+"""
+There are some utility exceptions for debug and explicit tracking
+"""
+
 
 class NameException(Exception):
     pass
