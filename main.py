@@ -1,103 +1,57 @@
 from UserInterface import *
-from ex import *
 
+'''
+Initialization file
+'''
 
-print("Program is running.\n"
-      "Enter the name for data base file.\n"
-      "Notice, that you shall type a pure name and\n"
-      "if file exists it shall be located in current directory.")
+contact_list = open_json("data_base.json")
 
-inputLine = input('>> ')
-
-while 1:
-    try:
-        contact_list = open_json(inputLine)
-        break
-    except PairExistException as e:
-        print("*** Pair " + str(e) + " mentioned in file twice! ***\n"
-                                     "*** Pair shall be unique. Please, enter new filename ***")
-        inputLine = input('>> ')
-    except IOError:
-        print("*** Incorrect input! Try again ***")
-        inputLine = input('>> ')
-
-filename = inputLine
-
-# TODO:
-#  - Create a better designed user interface
-#  - Implement add, find, remove, edit, print(filtered) options
-#  - Implement format checking for string
-#  - Implement converting for 'number' and 'birthdate'
-
-print("\nNow, you are able to chose one of the following features:\n"
-      " - add <Name> <Surname> <Number> (<Birthdate> - optional)\n"
-      " - find <Name> <Surname> <Number> <Birthdate> (Each parameter is optional, required one at least)\n"
-      " - remove <Name> <Surname> <Number> <Birthdate>\n"
-      " - edit <Name> <Surname> <Number> <Birthdate>\n"
-      " - print <Name> <Surname> <Number> <Birthdate>\n"
+print("\nPlease, chose one of the following features:\n"
+      " - add \n"
+      " - find \n"
+      " - edit \n"
       " - print all\n"
-      " - help  or  <command> help"
-      "In order to terminate program enter:"
-      " - shut down")
+      " - remove \n"
+      " - help <Command>\n"
+      "In order to terminate program enter:\n"
+      " - shut down\n")
 
-inputLine = input('>> ')
+input_line = input('>> ')
 
 while 1:
-    input_list = list(inputLine.split(" "))
-
     # ADD
-    # TODO now, <add> function take a Name and Surname without Space char
-    if input_list[0] == 'add':
-        try:
-            add(input_list, contact_list)
-        except NameException:
-            print("*** Unacceptable Name entered! Call <help> to check the convention ***")
-        except SurnameException:
-            print("*** Unacceptable Surname entered! Call <help> to check the convention ***")
-        except NumberException:
-            print("*** Unacceptable Number entered! Call <help> to check the convention ***")
-        except DateException:
-            print("*** Unacceptable Date entered! Call <help> to check the convention ***")
-        except WrongParamNumber:
-            print("*** Expected 3 or 4 parameters. Found " + str(len(input_list) - 1) + " ***")
+    if input_line == 'add':
+            add(contact_list)
     # FIND
-    elif input_list[0] == 'find':
-        try:
-            find(input_list, contact_list)
-        except NoneParamFound:
-            print("*** None parameter has been found! Try again ***")
-        except NameException:
-            print("*** Incorrect Name parameter ***")
-        except SurnameException:
-            print("*** Incorrect Surname parameter ***")
-        except NumberException:
-            print("*** Incorrect Number parameter ***")
-        except DateException:
-            print("*** Incorrect Date parameter ***")
-
-    # TODO remove existing contact from contact_list
-
-    # TODO:
-    #  - edit existing contact
-    #  - edit contact in certain field
-
-    # TODO print certain entry
-
-    # TODO help option
-
-
-    # SHUT DOWN
-    elif input_list[0] == "shut" and input_list[1] == "down":
-        print("Program has been shut down.\n"
-              "Contact list has been saved to " + filename + "file")
-        break
-
+    elif input_line == 'find':
+        find(contact_list)
+    # REMOVE
+    elif input_line == 'remove':
+        remove(contact_list)
+    # EDIT
+    elif input_line == 'edit':
+        edit(contact_list)
     # PRINT
-    elif input_list[0] == 'print':
-        if input_list[1] == 'all':
-            contact_list.print()
-
-    # ERROR
+    elif input_line == 'print all':
+        contact_list.print_all()
+    # SHUT DOWN
+    elif input_line == 'shut down':
+        print("\n=== Program has been shut down ===\n"
+              "Contact list has been saved to  data_base.json file")
+        break
+    elif input_line.split()[0] == 'help':
+        if input_line.split()[1] == 'add':
+            add_help()
+        elif input_line.split()[1] == 'find':
+            find_help()
+        elif input_line.split()[1] == 'edit':
+            edit_help()
+        elif input_line.split()[1] == 'print':
+            print_all_help()
+        elif input_line.split()[1] == 'remove':
+            remove_help()
+        elif input_line.split()[1] == 'shut':
+            shut_down_help()
     else:
         print("*** Wrong input ***")
-    inputLine = input('>> ')
+    input_line = input('>> ')
