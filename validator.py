@@ -4,25 +4,25 @@ import datetime
 
 def name_is_valid(name):
     if isinstance(name, str):
-        return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+", name)
+        return bool(re.match("[A-Za-z0-9 ]{2,}", name))
     raise TypeError
 
 
 def surname_is_valid(surname):
     if isinstance(surname, str):
-        return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+\b", surname)
+        return bool(re.match("[A-Za-z0-9 ]{2,}", surname))
     raise TypeError
 
 
-def date_is_valid(date):
-    if isinstance(date, str):
-        if not re.fullmatch("\d{2}[/ ,.:;]+\d{2}[/ ,.:;]+\d{2}", date):
+def date_is_valid(date_in):
+    if isinstance(date_in, str):
+        if not bool(re.match("\d{1,2}/\d{1,2}/\d{4}", date_in)):
             return False
 
-        day, month, year = date.split("[/ ,.:;]+")
+        date_sp = date_in.split("/")
 
         try:
-            datetime.datetime(int(year), int(month), int(day))
+            datetime.date(int(date_sp[2]), int(date_sp[1]), int(date_sp[0]))
         except ValueError:
             return False
         return True
@@ -31,17 +31,17 @@ def date_is_valid(date):
 
 def number_is_valid(number):
     if isinstance(number, str):
-        return re.fullmatch("(?:\+7|8)\d{10}", number)
+        return bool(re.match("(?:\+7|8)\d{10}", number))
     raise TypeError
 
 
 def tag_is_valid(tag):
     if isinstance(tag, str):
-        return re.fullmatch("\b[A-Z]{1}[A-Za-z0-9 ]+\b", tag)
+        return bool(re.match("[A-Za-z0-9 ]+", tag))
     raise TypeError
 
 
 def filename_is_valid(filename):
     if isinstance(filename, str):
-        return re.fullmatch("[A-Za-z_.\\\d:-]+", filename)
+        return bool(re.match("[A-Za-z_.\\\d:-]+", filename))
     raise TypeError
